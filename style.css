@@ -1,9 +1,47 @@
-body {
+.justify-center {
     display: flex;
     justify-content: center;
+}
+
+.align-center {
+    display: flex;
     align-items: center;
 }
 
-buttons {
+.calculator-container {
+    width: 300px;
+    height: 400px;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid blue;
+}
+
+.display,
+.console {
+    width: 280px;
+    height: 60px;
+    border: 2px solid red;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.buttons {
+   gap: 4px;
+}
+
+.button-row {
     display: flex;
+    justify-content: stretch;
+}
+
+.button {
+    height: 32px;
+    width: 32px;
+}
+
+.zero,
+.equals {
+    flex: 2;
 }

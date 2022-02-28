@@ -6,11 +6,11 @@
         <link rel="stylesheet" href="./style.css">
         <script src="./script.js" defer></script>
     </head>
-    <body>
-        <div class="calculator-container">
-            <div class="console"></div>
-            <div class="display"></div>
-            <div class="buttons">
+    <body class="justify-center">
+        <div class="calculator-container justify-center">
+            <div class="console align-center">1234567890</div>
+            <div class="display align-center">1234567890</div>
+            <div class="buttons justify-center">
                 <div class="buttons-right">
                     <div class="button-row">
                         <button class="button number">7</button>
@@ -31,17 +31,20 @@
                         <button class="button number">3</button>
                         <button class="button operator">-</button>
                     </div>
-                    <div>
-                        <button class="button number">0</button>
+                    <div class="button-row">
+                        <button class="button number zero">0</button>
                         <button class="button number">.</button>
+                        <button class="button operator">+</button>
                     </div>
-                    <div>
+                    <div class="button-row">
                         <button class="button equals">=</button>
                     </div>
                 </div>
                 <div class="buttons-left">
-                    <button class="button other"><-</button>
-                    <button class="button other">C</button>
+                    <div class="button-row">
+                        <button class="button other"><-</button>
+                        <button class="button other">C</button>
+                    </div>
                 </div>
             </div>
         </div>

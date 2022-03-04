@@ -2,58 +2,67 @@ let nums = document.querySelectorAll(".number");
 let operators = document.querySelectorAll(".operator");
 let equals = document.querySelector(".equals");
 let decimal = document.querySelector(".decimal");
+//let zero = document.querySelector(".zero");
+let display = document.querySelector(".display");
+let console = document.querySelector(".console");
 
-
+// nums includes decimal but does not include zero
 nums.forEach(num => num.addEventListener('click', processNumber));
 operators.forEach(operator => operator.addEventListener('click', processOperator));
 equals.addEventListener('click', calculate);
-decimal.addEventListener('click', processDecimal);
-// Remove listener for the decimal if there is already a decimal in the number array
-// Determine which eventlisteners should be active at what point! (after a calculation has been performed, for example)
+
 //TODO: create eventlisteners for key presses
 // TODO (extra): change the CSS styling when the button is being pressed (like in the drumkit tutorial)
+
+initializeDisplay();
 
 // TODO: How do I know which number I am currently processing?
 let a = null;
 let b = null;
 let operator = null;
-let result = null;
-display = "0";
-console = null;
+consoleText = ["","",""];
 
 function processNumber(e){
-    // TODO: concatenate the number
-    // be careful if the user enters 0 -> should not add another zero unless after a decimal
-    // Should I just have the diplay be 0. and simplify handling of zero and decimals?
+    
+    let num = e.target.innerText;
 
-    // check which number we are working on, a or b
-    // if the number is a decimal
-        // remove decimal event listener
-        // add zero event listener
-    
-    
-    if(a === null && b === null){
-        if(e.target.innerText === "."){
-            a = "0."
+    // always write the number to b -> other operations will shift the number to a when necessary
+    if(b === null){
+        
+        // This is the first number to be added after hitting "clear" or first calculation
+        if (num === "."){
+            b = "0."
+            decimal.removeEventListener('click', processNumber);
+            updateDisplay(b);
+        } else if (num !== "0"){
+            b = num;
+            updateDisplay(b);
         }
-        a = e.target.innerText;
+    } else {
+        if (num === "."){
+            decimal.removeEventListener('click', processNumber);
+        }
+        // b already contains some numbers so we can concatenate the next input
+        b += e.target.innerText;
+        updateDisplay(b);
     }
-}
-
-function processDecimal(e){
-    // TODO activate listener for zero if it is a legitimate decimal
-    // TODO remove listener for decimal if it is a legitimate decimal
 
 }
 
-function resetNumArray(){
-    // join the string together and convert to float
-    // save the resulting int to the correct variable a or b, depending on if A is null
-}
 
 function processOperator(e){
-    //
+    // Save operator to the variable
 }
+
+function initializeDisplay(){
+    display.innerText = "0";
+}
+
+function updateDisplay(num){
+    display.innerText = num;
+}
+
+
 
 function calculate(){
     // Check if all the variables are necessary to perform the calculation

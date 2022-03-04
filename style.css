@@ -17,6 +17,10 @@ Change the color of the buttons a little bit
     align-items: center;
 }
 
+.flex-column {
+    flex-direction: column;
+}
+
 .calculator-container {
     width: 300px;
     height: 400px;

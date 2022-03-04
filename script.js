@@ -2,11 +2,11 @@ let nums = document.querySelectorAll(".number");
 let operators = document.querySelectorAll(".operator");
 let equals = document.querySelector(".equals");
 let decimal = document.querySelector(".decimal");
-//let zero = document.querySelector(".zero");
 let display = document.querySelector(".display");
 let console = document.querySelector(".console");
+let consoleLines = Array.from(document.querySelectorAll(".console-line"));
 
-// nums includes decimal but does not include zero
+// nums includes decimal sign
 nums.forEach(num => num.addEventListener('click', processNumber));
 operators.forEach(operator => operator.addEventListener('click', processOperator));
 equals.addEventListener('click', calculate);
@@ -16,7 +16,6 @@ equals.addEventListener('click', calculate);
 
 initializeDisplay();
 
-// TODO: How do I know which number I am currently processing?
 let a = null;
 let b = null;
 let operator = null;
@@ -25,6 +24,8 @@ consoleText = ["","",""];
 function processNumber(e){
     
     let num = e.target.innerText;
+
+    // TODO: how to handle zero? What if someone wants to add 0 or divide by zero or something?
 
     // always write the number to b -> other operations will shift the number to a when necessary
     if(b === null){
@@ -51,7 +52,12 @@ function processNumber(e){
 
 
 function processOperator(e){
-    // Save operator to the variable
+    operator = e.target.innerText;
+    a = b;
+    b = null;
+    initializeDisplay();
+    updateConsoleTextOperator(a, operator);
+    updateConsole();
 }
 
 function initializeDisplay(){
@@ -62,12 +68,39 @@ function updateDisplay(num){
     display.innerText = num;
 }
 
+function updateConsole(){
+    for (let i = 0; i < consoleText.length; i++){
+        consoleLines[i].innerText = consoleText[i];
+    }
+}
 
+function updateConsoleTextOperator(a, operator){
+    // Shift the last operations over one
+    consoleText[0] = consoleText[1];
+    consoleText[1] = consoleText[2];
+    consoleText[2] = `${a} ${operator}`;
+}
+
+function updateConsoleTextEquals(b){
+    consoleText[2] += ` ${b}`;
+}
 
 function calculate(){
     // Check if all the variables are necessary to perform the calculation
-    // If everything is there, call the operate function
-    // otherwise don't do anything
+    if (a !== null && b !== null && operator !== null){
+        // update console by concatenating b
+        updateConsoleTextEquals(b);
+        updateConsole();
+        
+        let temp = operate(operator, parseFloat(a), parseFloat(b));
+
+        // update display with the result
+        updateDisplay(temp);
+
+        if(temp !== 'ERROR'){
+            b = temp;
+        }
+    }
 }
 
 function add(a, b){
@@ -106,8 +139,6 @@ function operate(operator, a, b){
         default:
             return 'ERROR';
     }
-    // TODO: save this text to a variable to display it in the calculator console
-    // I want to create a running tally of the functions used so far
 }
 
 // Rounding function found on:

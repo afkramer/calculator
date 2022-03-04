@@ -10,8 +10,7 @@ let consoleLines = Array.from(document.querySelectorAll(".console-line"));
 nums.forEach(num => num.addEventListener('click', processNumber));
 operators.forEach(operator => operator.addEventListener('click', processOperator));
 equals.addEventListener('click', calculate);
-window.addEventListener('keydown', processKey);
-//TODO: create eventlisteners for key presses
+window.addEventListener('keydown', passOnKey);
 // TODO (extra): change the CSS styling when the button is being pressed (like in the drumkit tutorial)
 
 initializeDisplay();
@@ -21,11 +20,32 @@ let b = null;
 let operator = null;
 consoleText = ["","",""];
 
-function processNumber(e){
-    
-    let num = e.target.innerText;
+//TODO: deal with decimals now that I am also accepting key presses
+// TODO: also accept enter as equals 
 
-    // TODO: how to handle zero? What if someone wants to add 0 or divide by zero or something?
+function passOnKey(e){
+    let key = e.key;
+    // Determine what event we are working with
+    if (key >= 0 && key <= 9 || key === '.'){
+        processNumber(key);
+
+    } else if (key === '='){
+        calculate();
+
+    } else if (key === '+' || key === '-' || key === 'x' || key === '/' || key === '*' || key === 'X'){
+        processOperator(key);
+    }
+}
+
+function passOnNumber(e){
+    processNumber(e.target.innerText);
+}
+
+function passOnOperator(e){
+    processOperator(e.target.innerText);
+}
+
+function processNumber(num){
 
     // always write the number to b -> other operations will shift the number to a when necessary
     if(b === null){
@@ -51,8 +71,8 @@ function processNumber(e){
 }
 
 
-function processOperator(e){
-    operator = e.target.innerText;
+function processOperator(operatorText){
+    operator = operatorText;
     // If the user has entered 0 it doesn't get saved to b
     if (b === null){
         a = 0;
@@ -64,10 +84,20 @@ function processOperator(e){
     initializeDisplay();
     updateConsoleTextOperator(a, operator);
     updateConsole();
+    decimal.addEventListener('click', processNumber);
 }
 
 function processKey(e){
     console.log(e.keyCode);
+    console.log(e.key);
+    
+    /*
+    let code = e.keyCode;
+    if(code >= 48 && code <= 57 || code === 190){
+        // It is a key between 0 and 9 or a decimal
+        processNumber(e);
+    } else if (code === )
+    */
 }
 
 function initializeDisplay(){
@@ -103,7 +133,7 @@ function calculate(){
             b = 0;
         }
         
-        let temp = operate(operator, parseFloat(a), parseFloat(b));
+        let temp = operate(operator, a, b);
 
         // update console with b and result
         updateConsoleTextEquals(b, temp);
@@ -148,6 +178,10 @@ function operate(operator, a, b){
         case '-':
             return subtract(a, b);
         case 'x':
+            return multiply(a, b);
+        case 'X':
+            return multiply(a, b);
+        case '*':
             return multiply(a, b);
         case '/':
             return divide(a, b);

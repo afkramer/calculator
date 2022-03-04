@@ -3,14 +3,14 @@ let operators = document.querySelectorAll(".operator");
 let equals = document.querySelector(".equals");
 let decimal = document.querySelector(".decimal");
 let display = document.querySelector(".display");
-let console = document.querySelector(".console");
+//let calcConsole = document.querySelector(".console");
 let consoleLines = Array.from(document.querySelectorAll(".console-line"));
 
 // nums includes decimal sign
 nums.forEach(num => num.addEventListener('click', processNumber));
 operators.forEach(operator => operator.addEventListener('click', processOperator));
 equals.addEventListener('click', calculate);
-
+window.addEventListener('keydown', processKey);
 //TODO: create eventlisteners for key presses
 // TODO (extra): change the CSS styling when the button is being pressed (like in the drumkit tutorial)
 
@@ -53,11 +53,21 @@ function processNumber(e){
 
 function processOperator(e){
     operator = e.target.innerText;
-    a = b;
-    b = null;
+    // If the user has entered 0 it doesn't get saved to b
+    if (b === null){
+        a = 0;
+    } else {
+        a = b;
+        b = null;
+    }
+    
     initializeDisplay();
     updateConsoleTextOperator(a, operator);
     updateConsole();
+}
+
+function processKey(e){
+    console.log(e.keyCode);
 }
 
 function initializeDisplay(){
@@ -81,18 +91,23 @@ function updateConsoleTextOperator(a, operator){
     consoleText[2] = `${a} ${operator}`;
 }
 
-function updateConsoleTextEquals(b){
-    consoleText[2] += ` ${b}`;
+function updateConsoleTextEquals(b, result){
+    consoleText[2] += ` ${b} = ${result}`;
 }
 
 function calculate(){
     // Check if all the variables are necessary to perform the calculation
-    if (a !== null && b !== null && operator !== null){
-        // update console by concatenating b
-        updateConsoleTextEquals(b);
-        updateConsole();
+    if (a !== null && operator !== null){
+        // If b is still null the user entered 0
+        if (b === null){
+            b = 0;
+        }
         
         let temp = operate(operator, parseFloat(a), parseFloat(b));
+
+        // update console with b and result
+        updateConsoleTextEquals(b, temp);
+        updateConsole();
 
         // update display with the result
         updateDisplay(temp);

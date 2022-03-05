@@ -22,14 +22,16 @@ consoleText = ["","",""];
 
 //TODO: deal with decimals now that I am also accepting key presses
 // TODO: also accept enter as equals 
+// TODO: take out reference to Wes Bos -> I'm now solving the issue my own way
 
 function passOnKey(e){
     let key = e.key;
+    console.log(key);
     // Determine what event we are working with
     if (key >= 0 && key <= 9 || key === '.'){
         processNumber(key);
 
-    } else if (key === '='){
+    } else if (key === '=' || key === 'Enter'){
         calculate();
 
     } else if (key === '+' || key === '-' || key === 'x' || key === '/' || key === '*' || key === 'X'){
@@ -53,7 +55,6 @@ function processNumber(num){
         // This is the first number to be added after hitting "clear" or first calculation
         if (num === "."){
             b = "0."
-            decimal.removeEventListener('click', processNumber);
             updateDisplay(b);
         } else if (num !== "0"){
             b = num;
@@ -61,10 +62,14 @@ function processNumber(num){
         }
     } else {
         if (num === "."){
-            decimal.removeEventListener('click', processNumber);
+            if (b.indexOf(".") === -1){
+                b += num;
+            }
+        } else {
+            b += num;
         }
         // b already contains some numbers so we can concatenate the next input
-        b += e.target.innerText;
+        
         updateDisplay(b);
     }
 

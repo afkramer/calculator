@@ -187,7 +187,7 @@ function determineMaxPrecision(...nums){
     // Determine the number with the max number of places after the decimal
     let maxPrecision = 0;
     for(let i = 0; i < nums.length; i++){
-        let num = toString(nums[i]);
+        let num = (nums[i]).toString();
         let precision = num.length - num.indexOf(".") - 1;
         if (precision > maxPrecision){
             maxPrecision = precision;

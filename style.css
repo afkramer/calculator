@@ -82,6 +82,7 @@ body {
 .equals {
     background-color: rgb(160, 16, 160);
     color: white;
+    margin-bottom: 0px;
 }
 
 .operator {

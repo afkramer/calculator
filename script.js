@@ -3,14 +3,17 @@ let operators = document.querySelectorAll(".operator");
 let equals = document.querySelector(".equals");
 let decimal = document.querySelector(".decimal");
 let display = document.querySelector(".display");
-//let calcConsole = document.querySelector(".console");
 let consoleLines = Array.from(document.querySelectorAll(".console-line"));
+let backspace = document.querySelector(".backspace");
+let clear = document.querySelector(".clear");
 
 // nums includes decimal sign
 nums.forEach(num => num.addEventListener('click', processNumber));
 operators.forEach(operator => operator.addEventListener('click', processOperator));
 equals.addEventListener('click', calculate);
 window.addEventListener('keydown', passOnKey);
+backspace.addEventListener('click', processBackspace);
+clear.addEventListener('click', processClear);
 // TODO (extra): change the CSS styling when the button is being pressed (like in the drumkit tutorial)
 
 initializeDisplay();
@@ -36,6 +39,10 @@ function passOnKey(e){
 
     } else if (key === '+' || key === '-' || key === 'x' || key === '/' || key === '*' || key === 'X'){
         processOperator(key);
+    } else if (key === 'Backspace'){
+        processBackspace();
+    } else if (key === 'Delete'){
+        processClear();
     }
 }
 
@@ -75,6 +82,16 @@ function processNumber(num){
 
 }
 
+function processBackspace(){
+    if (b === "0." || b.length === 1){
+        b = null;
+        initializeDisplay();
+    } else if (b !== null){
+        b = b.substring(0, b.length - 1);
+        updateDisplay(b);
+    }
+}
+
 function processOperator(operatorText){
     operator = operatorText;
     // If the user has entered 0 it doesn't get saved to b
@@ -89,6 +106,15 @@ function processOperator(operatorText){
     updateConsoleTextOperator(a, operator);
     updateConsole();
     decimal.addEventListener('click', processNumber);
+}
+
+function processClear(){
+    initializeDisplay();
+    a = null;
+    b = null;
+    operator = null;
+    consoleText = ["","",""];
+    updateConsole();
 }
 
 function initializeDisplay(){

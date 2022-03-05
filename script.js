@@ -75,7 +75,6 @@ function processNumber(num){
 
 }
 
-
 function processOperator(operatorText){
     operator = operatorText;
     // If the user has entered 0 it doesn't get saved to b
@@ -90,19 +89,6 @@ function processOperator(operatorText){
     updateConsoleTextOperator(a, operator);
     updateConsole();
     decimal.addEventListener('click', processNumber);
-}
-
-function processKey(e){
-    console.log(e.keyCode);
-    console.log(e.key);
-    
-    /*
-    let code = e.keyCode;
-    if(code >= 48 && code <= 57 || code === 190){
-        // It is a key between 0 and 9 or a decimal
-        processNumber(e);
-    } else if (code === )
-    */
 }
 
 function initializeDisplay(){
@@ -154,11 +140,13 @@ function calculate(){
 }
 
 function add(a, b){
-    return parseFloat(a) + parseFloat(b);
+    let maxPrecision = determineMaxPrecision(a, b); 
+    return round(parseFloat(a) + parseFloat(b), maxPrecision);
 }
 
 function subtract(a, b){
-    return a - b;
+    let maxPrecision = determineMaxPrecision(a, b);
+    return round(a - b, maxPrecision);
 }
 
 function multiply(a, b){
@@ -193,6 +181,20 @@ function operate(operator, a, b){
         default:
             return 'ERROR';
     }
+}
+
+function determineMaxPrecision(...nums){
+    // Determine the number with the max number of places after the decimal
+    let maxPrecision = 0;
+    for(let i = 0; i < nums.length; i++){
+        let num = toString(nums[i]);
+        let precision = num.length - num.indexOf(".") - 1;
+        if (precision > maxPrecision){
+            maxPrecision = precision;
+        }
+    }
+
+    return maxPrecision;
 }
 
 // Rounding function found on:

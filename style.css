@@ -7,6 +7,9 @@ Make the buttons look more 3D
 Change the color of the buttons a little bit
 */
 
+body {
+    background-color: rgb(201, 192, 192);
+}
 
 .justify-center {
     display: flex;
@@ -27,16 +30,18 @@ Change the color of the buttons a little bit
     height: 400px;
     align-items: center;
     flex-direction: column;
-    border: 2px solid blue;
     border-radius: 12px;
+    background-color: rgb(95, 3, 95);
+    margin-top: 60px;
 }
 
 .display,
 .console {
-    width: 280px;
-    border: 2px solid red;
+    width: 260px;
+    border-radius: 4px;
+    background-color: azure;
     justify-content: flex-end;
-    margin-top: 16px;
+
     padding: 12px;
     box-sizing: border-box;
     font-family: 'Major Mono Display', monospace;
@@ -45,6 +50,7 @@ Change the color of the buttons a little bit
 
 .display {
     height: 48px;
+    margin-top: 16px;
 }
 
 .console {
@@ -52,7 +58,7 @@ Change the color of the buttons a little bit
 }
 
 .buttons {
-    margin: 4px;
+    margin: 4px 4px 0px 4px;
 }
 
 .button-row {
@@ -64,9 +70,24 @@ Change the color of the buttons a little bit
     height: 36px;
     width: 36px;
     margin: 4px;
+    font-size: 16px;
+    border-radius: 4px;
 }
 
 .zero,
 .equals {
     flex: 2;
+}
+
+.equals {
+    background-color: rgb(160, 16, 160);
+    color: white;
+}
+
+.operator {
+    background-color: rgb(243, 145, 145);
+}
+
+.number {
+    background-color: rgb(154, 240, 240);
 }

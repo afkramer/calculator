@@ -21,8 +21,8 @@ let operator = null;
 consoleText = ["","",""];
 
 //TODO: deal with decimals now that I am also accepting key presses
-// TODO: also accept enter as equals 
-// TODO: take out reference to Wes Bos -> I'm now solving the issue my own way
+// TODO: deal with user entering operator before a number
+// TODO: add functionality for clear and backspace buttons
 
 function passOnKey(e){
     let key = e.key;

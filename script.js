@@ -23,9 +23,10 @@ let b = null;
 let operator = null;
 consoleText = ["","",""];
 
-//TODO: deal with decimals now that I am also accepting key presses
-// TODO: deal with user entering operator before a number
-// TODO: add functionality for clear and backspace buttons
+// TODO: deal with decimals now that I am also accepting key presses
+    // Add and subtract are good, what about multiplying and dividing?
+
+// TODO: package code into a main() function
 
 function passOnKey(e){
     let key = e.key;
@@ -33,10 +34,8 @@ function passOnKey(e){
     // Determine what event we are working with
     if (key >= 0 && key <= 9 || key === '.'){
         processNumber(key);
-
     } else if (key === '=' || key === 'Enter'){
         calculate();
-
     } else if (key === '+' || key === '-' || key === 'x' || key === '/' || key === '*' || key === 'X'){
         processOperator(key);
     } else if (key === 'Backspace'){
@@ -68,15 +67,15 @@ function processNumber(num){
             updateDisplay(b);
         }
     } else {
-        if (num === "."){
-            if (b.indexOf(".") === -1){
+        if (b.length < 16){
+            if (num === "."){
+                if (b.indexOf(".") === -1){
+                    b += num;
+                }
+            } else {
                 b += num;
             }
-        } else {
-            b += num;
         }
-        // b already contains some numbers so we can concatenate the next input
-        
         updateDisplay(b);
     }
 
@@ -92,20 +91,21 @@ function processBackspace(){
     }
 }
 
-function processOperator(operatorText){
-    operator = operatorText;
-    // If the user has entered 0 it doesn't get saved to b
+function processOperator(operatorInput){
     if (b === null){
-        a = 0;
-    } else {
-        a = b;
-        b = null;
+        b = 0;
     }
     
+    if (operator !== null){
+        calculate();
+    }
+
+    a = b;
+    b = null;
+    operator = operatorInput;
     initializeDisplay();
     updateConsoleTextOperator(a, operator);
     updateConsole();
-    decimal.addEventListener('click', processNumber);
 }
 
 function processClear(){
@@ -162,6 +162,8 @@ function calculate(){
         if(temp !== 'ERROR'){
             b = temp;
         }
+
+        operator = null;
     }
 }
 

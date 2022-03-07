@@ -1,10 +1,15 @@
+let a = null;
+let b = null;
+let operator = null;
+consoleText = ["","",""];
+let display = document.querySelector(".display");
+let consoleLines = Array.from(document.querySelectorAll(".console-line"));
+
 function main(){
     let nums = document.querySelectorAll(".number");
     let operators = document.querySelectorAll(".operator");
     let equals = document.querySelector(".equals");
     let decimal = document.querySelector(".decimal");
-    let display = document.querySelector(".display");
-    let consoleLines = Array.from(document.querySelectorAll(".console-line"));
     let backspace = document.querySelector(".backspace");
     let clear = document.querySelector(".clear");
 
@@ -17,11 +22,6 @@ function main(){
     window.addEventListener('keydown', passOnKey);
 
     initializeDisplay();
-
-    let a = null;
-    let b = null;
-    let operator = null;
-    consoleText = ["","",""];
 }
 
 
@@ -269,9 +269,11 @@ function round(value, precision){
     return Math.round(value * multiplier) / multiplier;
   }
 
-  
+
 // Scientific notation function found on:
 // https://devdocs.io/javascript/global_objects/number/toexponential
 function expo(x, f) {
     return Number.parseFloat(x).toExponential(f);
   }
+
+  main();

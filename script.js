@@ -1,32 +1,29 @@
-let nums = document.querySelectorAll(".number");
-let operators = document.querySelectorAll(".operator");
-let equals = document.querySelector(".equals");
-let decimal = document.querySelector(".decimal");
-let display = document.querySelector(".display");
-let consoleLines = Array.from(document.querySelectorAll(".console-line"));
-let backspace = document.querySelector(".backspace");
-let clear = document.querySelector(".clear");
+function main(){
+    let nums = document.querySelectorAll(".number");
+    let operators = document.querySelectorAll(".operator");
+    let equals = document.querySelector(".equals");
+    let decimal = document.querySelector(".decimal");
+    let display = document.querySelector(".display");
+    let consoleLines = Array.from(document.querySelectorAll(".console-line"));
+    let backspace = document.querySelector(".backspace");
+    let clear = document.querySelector(".clear");
 
-// nums includes decimal sign
-nums.forEach(num => num.addEventListener('click', processNumber));
-operators.forEach(operator => operator.addEventListener('click', processOperator));
-equals.addEventListener('click', calculate);
-window.addEventListener('keydown', passOnKey);
-backspace.addEventListener('click', processBackspace);
-clear.addEventListener('click', processClear);
-// TODO (extra): change the CSS styling when the button is being pressed (like in the drumkit tutorial)
+    // nums includes decimal sign
+    nums.forEach(num => num.addEventListener('click', passOnNumber));
+    operators.forEach(operator => operator.addEventListener('click', passOnOperator));
+    equals.addEventListener('click', calculate);
+    backspace.addEventListener('click', processBackspace);
+    clear.addEventListener('click', processClear);
+    window.addEventListener('keydown', passOnKey);
 
-initializeDisplay();
+    initializeDisplay();
 
-let a = null;
-let b = null;
-let operator = null;
-consoleText = ["","",""];
+    let a = null;
+    let b = null;
+    let operator = null;
+    consoleText = ["","",""];
+}
 
-// TODO: deal with decimals now that I am also accepting key presses
-    // Add and subtract are good, what about multiplying and dividing?
-
-// TODO: package code into a main() function
 
 function passOnKey(e){
     let key = e.key;
@@ -45,19 +42,21 @@ function passOnKey(e){
     }
 }
 
+
 function passOnNumber(e){
     processNumber(e.target.innerText);
 }
+
 
 function passOnOperator(e){
     processOperator(e.target.innerText);
 }
 
+
 function processNumber(num){
 
-    // always write the number to b -> other operations will shift the number to a when necessary
+    // The current number is always written to b -> other operations will shift the number to a when necessary
     if(b === null){
-        
         // This is the first number to be added after hitting "clear" or first calculation
         if (num === "."){
             b = "0."
@@ -67,6 +66,7 @@ function processNumber(num){
             updateDisplay(b);
         }
     } else {
+        // The user has already entered a number
         if (b.length < 16){
             if (num === "."){
                 if (b.indexOf(".") === -1){
@@ -78,28 +78,34 @@ function processNumber(num){
         }
         updateDisplay(b);
     }
-
 }
 
+
 function processBackspace(){
-    if (b === "0." || b.length === 1){
-        b = null;
-        initializeDisplay();
-    } else if (b !== null){
-        b = b.substring(0, b.length - 1);
-        updateDisplay(b);
+    if (typeof(b) === 'string'){
+        if (b === "0." || b.length === 1){
+            b = null;
+            initializeDisplay();
+        } else {
+            b = b.substring(0, b.length - 1);
+            updateDisplay(b);
+        }
     }
 }
 
+
 function processOperator(operatorInput){
+    // The user entered an operator before entering a number
     if (b === null){
         b = 0;
     }
     
+    // The user is entering strings of numbers and operators without using equals
     if (operator !== null){
         calculate();
     }
 
+    // Prepare for the next number to be entered
     a = b;
     b = null;
     operator = operatorInput;
@@ -107,6 +113,7 @@ function processOperator(operatorInput){
     updateConsoleTextOperator(a, operator);
     updateConsole();
 }
+
 
 function processClear(){
     initializeDisplay();
@@ -117,13 +124,23 @@ function processClear(){
     updateConsole();
 }
 
+
 function initializeDisplay(){
     display.innerText = "0";
 }
 
+
 function updateDisplay(num){
+    num = num.toString();
+
+    // Do not allow overflow numbers
+    if (num.length > 16){
+        num = expo(num, 12);
+    }
+    
     display.innerText = num;
 }
+
 
 function updateConsole(){
     for (let i = 0; i < consoleText.length; i++){
@@ -131,19 +148,34 @@ function updateConsole(){
     }
 }
 
-function updateConsoleTextOperator(a, operator){
-    // Shift the last operations over one
+
+function updateConsoleTextOperator(a, operator){    
+    // Do not allow overflow numbers -> otherwise too many lines are added to the console
+    if(a.toString().length > 5){
+        a = expo(a, 5);
+    }
+
+    // Shift the lines down and add beginning of new calculation
     consoleText[0] = consoleText[1];
     consoleText[1] = consoleText[2];
     consoleText[2] = `${a} ${operator}`;
 }
 
-function updateConsoleTextEquals(b, result){
+function updateConsoleTextEquals(b, result){  
+    // Do not allow overflow numbers -> otherwise too many lines are added to the console
+    if(b.toString().length > 5){
+        b = expo(b, 5);
+    }
+    if(result.toString().length > 5){
+        result = expo(result, 5);
+    }
+    
+    // Add the rest of the calculation to the last line
     consoleText[2] += ` ${b} = ${result}`;
 }
 
 function calculate(){
-    // Check if all the variables are necessary to perform the calculation
+    // Check if all the necessary variables are available to perform the calculation
     if (a !== null && operator !== null){
         // If b is still null the user entered 0
         if (b === null){
@@ -167,30 +199,33 @@ function calculate(){
     }
 }
 
+
 function add(a, b){
+    // Due to how JavaScript handles floats it's necessary to round
     let maxPrecision = determineMaxPrecision(a, b); 
     return round(parseFloat(a) + parseFloat(b), maxPrecision);
 }
 
+
 function subtract(a, b){
+    // Due to how JavaScript handles floats it's necessary to round
     let maxPrecision = determineMaxPrecision(a, b);
     return round(a - b, maxPrecision);
 }
 
+
 function multiply(a, b){
     return a * b;
-    // handle floats!
-    // will need to rely on rounding I think?
 }
+
 
 function divide(a, b){
     if (b === 0){
         return "ERROR";
     }
     return a / b;
-    // handle floats!
-    // use the rounding function to help
 }
+
 
 function operate(operator, a, b){
     switch(operator){
@@ -211,6 +246,7 @@ function operate(operator, a, b){
     }
 }
 
+
 function determineMaxPrecision(...nums){
     // Determine the number with the max number of places after the decimal
     let maxPrecision = 0;
@@ -221,9 +257,9 @@ function determineMaxPrecision(...nums){
             maxPrecision = precision;
         }
     }
-
     return maxPrecision;
 }
+
 
 // Rounding function found on:
 // https://stackoverflow.com/questions/7342957/how-do-you-round-to-1-decimal-place-in-javascript
@@ -231,4 +267,11 @@ function determineMaxPrecision(...nums){
 function round(value, precision){
     let multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
+  }
+
+  
+// Scientific notation function found on:
+// https://devdocs.io/javascript/global_objects/number/toexponential
+function expo(x, f) {
+    return Number.parseFloat(x).toExponential(f);
   }

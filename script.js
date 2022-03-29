@@ -31,7 +31,10 @@ function passOnKey(e){
     // Determine what event we are working with
     if (key >= 0 && key <= 9 || key === '.'){
         processNumber(key);
-    } else if (key === '=' || key === 'Enter'){
+    } else if (key === 'Enter'){
+        e.preventDefault();
+        calculate();
+    } else if (key === '='){
         calculate();
     } else if (key === '+' || key === '-' || key === 'x' || key === '/' || key === '*' || key === 'X'){
         processOperator(key);
